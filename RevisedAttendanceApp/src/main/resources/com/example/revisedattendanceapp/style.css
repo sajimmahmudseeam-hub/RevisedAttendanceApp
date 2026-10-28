@@ -1,0 +1,251 @@
+/* ==========================================================================
+   1. GLOBAL & ROOT SETTINGS
+   ========================================================================== */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #F8FAFC;
+}
+
+/* ==========================================================================
+   2. HEADER BANNER & STAT CARDS
+   ========================================================================== */
+.header-banner {
+    -fx-background-color: linear-gradient(to right, #6366F1, #4F46E5);
+    -fx-padding: 16 20;
+}
+
+.header-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.header-subtitle {
+    -fx-text-fill: #E0E7FF;
+    -fx-font-size: 12px;
+}
+
+.stat-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.04), 6, 0, 0, 1);
+    -fx-border-color: #F1F5F9;
+    -fx-border-radius: 8px;
+}
+
+.stat-title {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.stat-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* ==========================================================================
+   3. INPUT FIELDS & BUTTONS
+   ========================================================================== */
+.input-field {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 10;
+}
+
+.date-nav-button {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+    -fx-padding: 7px 12px;
+}
+
+/* Primary Action Buttons */
+.btn-purple {
+    -fx-background-color: #4F46E5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 7 14;
+    -fx-cursor: hand;
+}
+.btn-purple:hover { -fx-background-color: #4338CA; }
+
+.btn-green {
+    -fx-background-color: #10B981;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 7 14;
+    -fx-cursor: hand;
+}
+.btn-green:hover { -fx-background-color: #059669; }
+
+.btn-green-dark {
+    -fx-background-color: #059669;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 7 16;
+    -fx-cursor: hand;
+}
+.btn-green-dark:hover { -fx-background-color: #047857; }
+
+.btn-red {
+    -fx-background-color: #EF4444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 7 14;
+    -fx-cursor: hand;
+}
+.btn-red:hover { -fx-background-color: #DC2626; }
+
+.btn-orange {
+    -fx-background-color: #F59E0B;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 7 14;
+    -fx-cursor: hand;
+}
+.btn-orange:hover { -fx-background-color: #D97706; }
+
+.btn-grey {
+    -fx-background-color: #64748B;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 7 14;
+    -fx-cursor: hand;
+}
+.btn-grey:hover { -fx-background-color: #475569; }
+
+/* CSV Specific Colored Buttons */
+.btn-import-csv {
+    -fx-background-color: #EEF2FF;
+    -fx-text-fill: #4F46E5;
+    -fx-border-color: #C7D2FE;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 12px;
+    -fx-cursor: hand;
+}
+.btn-import-csv:hover { -fx-background-color: #E0E7FF; }
+
+.btn-export-csv {
+    -fx-background-color: #ECFDF5;
+    -fx-text-fill: #059669;
+    -fx-border-color: #A7F3D0;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 12px;
+    -fx-cursor: hand;
+}
+.btn-export-csv:hover { -fx-background-color: #D1FAE5; }
+
+/* Sidebar Icon Quick Actions */
+.action-icon-btn {
+    -fx-background-color: #F1F5F9;
+    -fx-text-fill: #334155;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+.action-icon-btn:hover { -fx-background-color: #E2E8F0; }
+
+.action-icon-btn-danger {
+    -fx-background-color: #FEF2F2;
+    -fx-text-fill: #DC2626;
+    -fx-border-color: #FCA5A5;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+.action-icon-btn-danger:hover { -fx-background-color: #FEE2E2; }
+
+/* ==========================================================================
+   4. TABLE VIEW & UNIFIED ALIGNMENT (1:1 HEADER & ROW ALIGNMENT)
+   ========================================================================== */
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 8px;
+}
+
+/* Equalize column header heights across leftTable and rightTable */
+.table-view .column-header-background,
+.table-view .column-header,
+.table-view .column-header .filler {
+    -fx-background-color: #F8FAFC;
+    -fx-pref-height: 38px;
+    -fx-min-height: 38px;
+    -fx-max-height: 38px;
+}
+
+.table-view .column-header,
+.table-view .column-header .label {
+    -fx-alignment: CENTER;
+    -fx-text-alignment: center;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #475569;
+}
+
+/* Table cell alignment and heights */
+.table-row-cell {
+    -fx-border-color: transparent transparent #F1F5F9 transparent;
+    -fx-cell-size: 36px;
+    -fx-min-height: 36px;
+    -fx-max-height: 36px;
+}
+
+.table-cell {
+    -fx-padding: 0 6px 0 6px;
+    -fx-alignment: CENTER-LEFT;
+}
+
+/* ==========================================================================
+   5. DONUT CHART PALETTE (3-COLOR)
+   ========================================================================== */
+.default-color0.chart-pie { -fx-pie-color: #10B981; } /* Present - Emerald Green */
+.default-color1.chart-pie { -fx-pie-color: #EF4444; } /* Absent - Red */
+.default-color2.chart-pie { -fx-pie-color: #F59E0B; } /* Late - Amber Orange */
+/* Custom Donut Chart Slice Colors (Matches P, A, L Badges) */
+.default-color0.chart-pie { -fx-pie-color: #22C55E; } /* Present - Green */
+.default-color1.chart-pie { -fx-pie-color: #EF4444; } /* Absent - Red */
+.default-color2.chart-pie { -fx-pie-color: #EAB308; } /* Late - Yellow */
+
+/* Remove chart border line styling */
+.chart-pie {
+    -fx-border-color: transparent;
+}
+/* Minimal Sidebar Toggle Style */
+.sidebar-toggle-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+.sidebar-toggle-btn:hover {
+    -fx-background-color: #e2e8f0;
+}

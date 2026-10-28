@@ -1,0 +1,88 @@
+
+ATTENDANCEAPP - HOW TO RUN
+==========================
+
+PROJECT INFORMATION
+-------------------
+Project name: AttendanceApp
+Project folder: RevisedAttendanceApp
+Programming language: Java
+Configured JDK target: 26
+User interface: JavaFX
+Database: SQLite
+Build system: Maven
+Recommended IDE: IntelliJ IDEA
+
+
+REQUIREMENTS
+------------
+1. Install JDK 26.
+2. Install Maven or configure compatible Maven support in IntelliJ IDEA.
+3. Ensure that the dependencies declared in pom.xml can be resolved.
+
+
+METHOD 1: RUN IN INTELLIJ IDEA
+------------------------------
+1. Open IntelliJ IDEA.
+2. Open the RevisedAttendanceApp project folder.
+3. Configure the project JDK to use JDK 26.
+4. Open pom.xml and reload the Maven project.
+5. Wait for Maven dependencies to resolve.
+6. Navigate to:
+
+   src/main/java/com/example/revisedattendanceapp/Launcher.java
+
+7. Open Launcher.java.
+8. Click the green Run icon beside the main() method.
+9. Check that the AttendanceApp window opens.
+
+IMPORTANT:
+Set the working directory to the project root, where pom.xml
+and attendance.db are located.
+
+
+METHOD 2: RUN USING MAVEN
+-------------------------
+1. Open a terminal in the RevisedAttendanceApp project root.
+2. Confirm that JDK 26 and Maven are available.
+3. Execute:
+
+   mvn clean javafx:run
+
+4. Wait for the build and application launch.
+5. Check the terminal for any errors.
+
+
+DATABASE
+--------
+The application uses SQLite through JDBC.
+
+The database file is named:
+
+   attendance.db
+
+The application expects the database path relative to its
+working directory. Keep the working directory configured to
+the project root unless the database path is deliberately changed.
+
+Back up important database records before replacing or deleting
+the database file.
+
+
+TROUBLESHOOTING
+---------------
+If the application does not start:
+
+1. Check that JDK 26 is installed and selected.
+2. Check that Maven is configured correctly.
+3. Reload the Maven project and resolve dependencies.
+4. Confirm that the terminal is in the project root.
+5. Check that attendance.db is available at the expected path.
+6. Read the IntelliJ Run console or terminal error messages.
+
+
+VERIFICATION NOTE
+-----------------
+These instructions describe the intended launch procedure.
+Confirm that the application builds and launches successfully
+in the target environment before reporting it as tested.

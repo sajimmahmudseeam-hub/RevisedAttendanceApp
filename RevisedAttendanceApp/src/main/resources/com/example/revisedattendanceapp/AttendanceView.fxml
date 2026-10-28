@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.revisedattendanceapp.AttendanceController">
+    <padding>
+        <Insets top="12.0" right="12.0" bottom="12.0" left="12.0" />
+    </padding>
+
+    <!-- Header Banner -->
+    <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #1E293B; -fx-padding: 10px 16px; -fx-background-radius: 8px;">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label fx:id="lblHeaderTitle" text="Seeam's Attendance Sheet" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;" />
+            <Label text="Department of Computer Science and Technology | School of Computer Science and Technology" style="-fx-font-size: 12px; -fx-text-fill: #38BDF8; -fx-font-weight: bold;" />
+            <Label text="Southwest University of Science and Technology" style="-fx-font-size: 10px; -fx-text-fill: #94A3B8;" />
+        </VBox>
+        <VBox alignment="CENTER_RIGHT" spacing="3.0">
+            <Label text="Professor / Instructor:" style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;" />
+            <TextField fx:id="profField" promptText="Professor Name" editable="false" focusTraversable="false" prefWidth="180.0" style="-fx-background-color: #0F172A; -fx-text-fill: #38BDF8; -fx-border-color: #334155; -fx-border-radius: 4px; -fx-font-weight: bold;" />
+        </VBox>
+    </HBox>
+
+    <!-- Top Toolbar Controls -->
+    <HBox spacing="8.0" alignment="CENTER_LEFT" style="-fx-background-color: #F8FAFC; -fx-padding: 8px; -fx-background-radius: 8px;">
+        <Button text="+ Add Class" onAction="#handleAddClassManually" style="-fx-background-color: #0EA5E9; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+        <ComboBox fx:id="courseComboBox" prefWidth="160.0" />
+
+        <Separator orientation="VERTICAL" prefHeight="20.0" />
+
+        <!-- View Mode Switcher (Monthly View vs Weekly View) -->
+        <ComboBox fx:id="viewModeComboBox" prefWidth="125.0" />
+
+        <!-- Monthly View Date Picker -->
+        <HBox fx:id="monthlyControlsBox" alignment="CENTER_LEFT" spacing="4.0">
+            <Button text="◀" onAction="#handlePreviousDay" style="-fx-background-color: #334155; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+            <DatePicker fx:id="datePicker" prefWidth="130.0" promptText="Select Month" />
+            <Button text="▶" onAction="#handleNextDay" style="-fx-background-color: #334155; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+        </HBox>
+
+        <!-- Weekly View Controls (Start Date + Manual Week Number Dropdown) -->
+        <HBox fx:id="weeklyControlsBox" alignment="CENTER_LEFT" spacing="6.0" visible="false" managed="false">
+            <Label text="Start Date:" style="-fx-font-weight: bold; -fx-text-fill: #334155;" />
+            <DatePicker fx:id="startDatePicker" prefWidth="130.0" promptText="Start Date" />
+            <Label text="Select Week:" style="-fx-font-weight: bold; -fx-text-fill: #334155;" />
+            <ComboBox fx:id="weekNumberComboBox" prefWidth="175.0" promptText="Select Week" />
+        </HBox>
+
+        <TextField fx:id="searchField" promptText="Search student ID or Name..." prefWidth="120.0" HBox.hgrow="ALWAYS" />
+        <Button text="Mark All Present" onAction="#handleMarkAllPresent" style="-fx-background-color: #16A34A; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+        <Button text="Import CSV" onAction="#handleImportStudents" style="-fx-cursor: hand;" />
+        <Button text="Export CSV" onAction="#handleExportCSV" style="-fx-cursor: hand;" />
+    </HBox>
+
+    <!-- Main Content Layout -->
+    <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+
+        <!-- 1. LEFT SECTION (Collapsible Sidebar) -->
+        <VBox spacing="4.0">
+            <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 2px;">
+                <Button fx:id="btnToggleLeft" text="◀" onAction="#handleToggleLeftSidebar" style="-fx-background-color: #475569; -fx-text-fill: white; -fx-font-size: 10px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 2px 6px;" />
+            </HBox>
+
+            <ScrollPane fx:id="leftSidebarScroll" fitToWidth="true" fitToHeight="true" vbarPolicy="NEVER" hbarPolicy="NEVER" prefWidth="280.0" minWidth="260.0" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: #F8FAFC; -fx-background-radius: 8px;">
+                <content>
+                    <VBox spacing="8.0" style="-fx-padding: 6px;" VBox.vgrow="ALWAYS">
+
+                        <!-- CARD 1: QUICK ACTIONS -->
+                        <VBox spacing="6.0" style="-fx-background-color: #FFFFFF; -fx-padding: 10px; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;">
+                            <HBox alignment="CENTER_LEFT" spacing="6.0">
+                                <Label text="⚡ Quick Actions" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1E293B;" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblSelectedStatus" text="No Selection" style="-fx-font-size: 9px; -fx-text-fill: #94A3B8; -fx-font-style: italic;" />
+                            </HBox>
+                            <Separator />
+                            <Button text="+ Add New Student" onAction="#handleAddStudent" maxWidth="17976931348623157E308" style="-fx-background-color: #2563EB; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 11px; -fx-padding: 5px;" />
+                            <HBox spacing="6.0">
+                                <Button fx:id="btnEditStudent" text="✏️ Edit" onAction="#handleEditStudent" disable="true" HBox.hgrow="ALWAYS" maxWidth="17976931348623157E308" style="-fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 4px; -fx-font-size: 11px; -fx-padding: 4px;" />
+                                <Button fx:id="btnDeleteStudent" text="🗑️ Delete" onAction="#handleDeleteStudent" disable="true" HBox.hgrow="ALWAYS" maxWidth="17976931348623157E308" style="-fx-background-color: #FEF2F2; -fx-text-fill: #DC2626; -fx-border-color: #FCA5A5; -fx-border-radius: 4px; -fx-font-size: 11px; -fx-padding: 4px;" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- MERGED CARD: CLASS ANALYTICS & BREAKDOWN -->
+                        <VBox VBox.vgrow="ALWAYS" spacing="8.0" style="-fx-background-color: #FFFFFF; -fx-padding: 10px; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;">
+
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="📊 Class Analytics" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #1E293B;" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="lblTotalStudentsBadge" text="0 Enrolled" style="-fx-background-color: #F1F5F9; -fx-text-fill: #475569; -fx-font-size: 9px; -fx-font-weight: bold; -fx-padding: 2 6 2 6; -fx-background-radius: 10px;" />
+                            </HBox>
+
+                            <Separator />
+
+                            <VBox spacing="4.0">
+                                <HBox alignment="CENTER_LEFT" style="-fx-background-color: #F0FDF4; -fx-padding: 4px 8px; -fx-background-radius: 4px; -fx-border-color: #BBF7D0; -fx-border-radius: 4px;">
+                                    <Label text="PRESENT" style="-fx-font-size: 8px; -fx-font-weight: bold; -fx-text-fill: #166534;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <HBox alignment="BASELINE_RIGHT" spacing="3.0">
+                                        <Label fx:id="lblPresent" text="0" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #15803D;" />
+                                        <Label fx:id="lblPresentPct" text="(0.0%)" style="-fx-font-size: 9px; -fx-text-fill: #166534;" />
+                                    </HBox>
+                                </HBox>
+
+                                <HBox alignment="CENTER_LEFT" style="-fx-background-color: #FEF2F2; -fx-padding: 4px 8px; -fx-background-radius: 4px; -fx-border-color: #FECACA; -fx-border-radius: 4px;">
+                                    <Label text="ABSENT" style="-fx-font-size: 8px; -fx-font-weight: bold; -fx-text-fill: #991B1B;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <HBox alignment="BASELINE_RIGHT" spacing="3.0">
+                                        <Label fx:id="lblAbsent" text="0" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #DC2626;" />
+                                        <Label fx:id="lblAbsentPct" text="(0.0%)" style="-fx-font-size: 9px; -fx-text-fill: #991B1B;" />
+                                    </HBox>
+                                </HBox>
+
+                                <HBox alignment="CENTER_LEFT" style="-fx-background-color: #FFFBEB; -fx-padding: 4px 8px; -fx-background-radius: 4px; -fx-border-color: #FDE68A; -fx-border-radius: 4px;">
+                                    <Label text="LATE" style="-fx-font-size: 8px; -fx-font-weight: bold; -fx-text-fill: #92400E;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <HBox alignment="BASELINE_RIGHT" spacing="3.0">
+                                        <Label fx:id="lblLate" text="0" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #D97706;" />
+                                        <Label fx:id="lblLatePct" text="(0.0%)" style="-fx-font-size: 9px; -fx-text-fill: #92400E;" />
+                                    </HBox>
+                                </HBox>
+
+                                <HBox alignment="CENTER_LEFT" style="-fx-background-color: #F8FAFC; -fx-padding: 4px 8px; -fx-background-radius: 4px; -fx-border-color: #E2E8F0; -fx-border-radius: 4px;">
+                                    <Label text="TOTAL LOGS" style="-fx-font-size: 8px; -fx-font-weight: bold; -fx-text-fill: #475569;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblTotalLogs" text="0" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #334155;" />
+                                </HBox>
+                            </VBox>
+
+                            <StackPane VBox.vgrow="ALWAYS" alignment="CENTER" minHeight="100.0">
+                                <PieChart fx:id="attendancePieChart" legendVisible="false" labelsVisible="false" />
+
+                                <VBox alignment="CENTER" maxHeight="50.0" maxWidth="50.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 100px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 3, 0, 0, 1);">
+                                    <Label fx:id="lblDonutRate" text="0.0%" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #15803D;" />
+                                    <Label text="Overall" style="-fx-font-size: 7px; -fx-text-fill: #94A3B8;" />
+                                </VBox>
+                            </StackPane>
+
+                            <VBox spacing="3.0">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label text="Overall Attendance" style="-fx-font-size: 9px; -fx-text-fill: #64748B;" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblRate" text="0.0%" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #15803D;" />
+                                </HBox>
+                                <ProgressBar fx:id="progressAttendance" progress="0.0" maxWidth="17976931348623157E308" prefHeight="6.0" style="-fx-accent: #22C55E;" />
+                            </VBox>
+
+                            <HBox fx:id="cardAtRisk" alignment="CENTER_LEFT" spacing="6.0" style="-fx-background-color: #FFF1F2; -fx-padding: 4px 8px; -fx-background-radius: 4px; -fx-border-color: #FFE4E6;">
+                                <Label text="⚠️" style="-fx-font-size: 10px;" />
+                                <Label fx:id="lblAtRiskCount" text="0 Students &lt; 80% Attendance" style="-fx-font-size: 9px; -fx-text-fill: #BE123C; -fx-font-weight: bold;" />
+                            </HBox>
+
+                        </VBox>
+
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+
+        <!-- 2. TABLE AREA -->
+        <HBox fx:id="tableContainer" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" style="-fx-border-color: #CBD5E1; -fx-border-radius: 4px;">
+
+            <VBox fx:id="middleSectionContainer" spacing="0.0" prefWidth="405.0" minWidth="405.0" maxWidth="405.0">
+                <TableView fx:id="leftTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colSerial" text="SL No." prefWidth="55.0" />
+                        <TableColumn fx:id="colId" text="ID" prefWidth="100.0" />
+                        <TableColumn fx:id="colName" prefWidth="175.0" />
+                        <TableColumn fx:id="colOverall" text="Overall %" prefWidth="75.0" />
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <TableView fx:id="rightTable" HBox.hgrow="ALWAYS">
+            </TableView>
+        </HBox>
+
+    </HBox>
+</VBox>
