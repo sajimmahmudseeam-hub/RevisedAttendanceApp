@@ -1,34 +1,82 @@
+
 package com.example.revisedattendanceapp;
 
 import java.sql.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class DatabaseHandler {
 
-    private static final String DB_URL = "jdbc:sqlite:attendance.db";
+    private static final Path DB_PATH = Paths.get(
+            System.getenv("LOCALAPPDATA"),
+            "RevisedAttendanceApp",
+            "attendance.db"
+    );
 
     public static Connection connect() throws SQLException {
-        return DriverManager.getConnection(DB_URL);
+        try {
+            Files.createDirectories(DB_PATH.getParent());
+
+            if (Files.notExists(DB_PATH)) {
+                try (InputStream input = DatabaseHandler.class
+                        .getResourceAsStream("/attendance.db")) {
+
+                    if (input == null) {
+                        throw new IOException(
+                                "Packaged attendance.db was not found."
+                        );
+                    }
+
+                    Files.copy(input, DB_PATH);
+                }
+            }
+
+            return DriverManager.getConnection(
+                    "jdbc:sqlite:" + DB_PATH.toAbsolutePath()
+            );
+
+        } catch (IOException e) {
+            throw new SQLException(
+                    "Unable to initialize attendance database.", e
+            );
+        }
     }
 
     public static void initDatabase() {
-        String createClasses = "CREATE TABLE IF NOT EXISTS classes (class_name TEXT PRIMARY KEY);";
-        String createStudents = "CREATE TABLE IF NOT EXISTS students (student_id TEXT PRIMARY KEY, name TEXT NOT NULL);";
-        String createAttendance = "CREATE TABLE IF NOT EXISTS attendance (" +
-                "student_id TEXT, course TEXT, date TEXT, status TEXT, reason TEXT, " +
-                "PRIMARY KEY (student_id, course, date));";
+        String createClasses =
+                "CREATE TABLE IF NOT EXISTS classes " +
+                        "(class_name TEXT PRIMARY KEY);";
 
-        try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
+        String createStudents =
+                "CREATE TABLE IF NOT EXISTS students " +
+                        "(student_id TEXT PRIMARY KEY, name TEXT NOT NULL);";
+
+        String createAttendance =
+                "CREATE TABLE IF NOT EXISTS attendance (" +
+                        "student_id TEXT, course TEXT, date TEXT, status TEXT, reason TEXT, " +
+                        "PRIMARY KEY (student_id, course, date));";
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+
             stmt.execute(createClasses);
             stmt.execute(createStudents);
             stmt.execute(createAttendance);
 
-            // Add reason column automatically if missing in older database tables
+            // Add reason column if it does not already exist
             try {
-                stmt.execute("ALTER TABLE attendance ADD COLUMN reason TEXT;");
-            } catch (SQLException ignored) {}
+                stmt.execute(
+                        "ALTER TABLE attendance ADD COLUMN reason TEXT;"
+                );
+            } catch (SQLException ignored) {
+                // Column already exists
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,7 +84,8 @@ public class DatabaseHandler {
     }
 
     public static void addClass(String className) {
-        String sql = "INSERT OR IGNORE INTO classes(class_name) VALUES(?)";
+        String sql =
+                "INSERT OR IGNORE INTO classes(class_name) VALUES(?)";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -53,7 +102,8 @@ public class DatabaseHandler {
     public static List<String> getAllClasses() {
         List<String> classes = new ArrayList<>();
 
-        String sql = "SELECT class_name FROM classes ORDER BY class_name";
+        String sql =
+                "SELECT class_name FROM classes ORDER BY class_name";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -70,8 +120,12 @@ public class DatabaseHandler {
         return classes;
     }
 
-    public static void insertStudent(String studentId, String studentName) {
-        String sql = "INSERT OR REPLACE INTO students(student_id, name) VALUES(?, ?)";
+    public static void insertStudent(
+            String studentId,
+            String studentName) {
+
+        String sql =
+                "INSERT OR REPLACE INTO students(student_id, name) VALUES(?, ?)";
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -89,15 +143,24 @@ public class DatabaseHandler {
         insertStudent(id, name);
     }
 
-    public static void updateStudent(String oldId, String newId, String newName) {
-        String sqlUpdateStudent = "UPDATE students SET student_id = ?, name = ? WHERE student_id = ?";
-        String sqlUpdateAttendance = "UPDATE attendance SET student_id = ? WHERE student_id = ?";
+    public static void updateStudent(
+            String oldId,
+            String newId,
+            String newName) {
+
+        String sqlUpdateStudent =
+                "UPDATE students SET student_id = ?, name = ? WHERE student_id = ?";
+
+        String sqlUpdateAttendance =
+                "UPDATE attendance SET student_id = ? WHERE student_id = ?";
 
         try (Connection conn = connect()) {
             conn.setAutoCommit(false);
 
-            try (PreparedStatement pstmt1 = conn.prepareStatement(sqlUpdateStudent);
-                 PreparedStatement pstmt2 = conn.prepareStatement(sqlUpdateAttendance)) {
+            try (PreparedStatement pstmt1 =
+                         conn.prepareStatement(sqlUpdateStudent);
+                 PreparedStatement pstmt2 =
+                         conn.prepareStatement(sqlUpdateAttendance)) {
 
                 pstmt1.setString(1, newId);
                 pstmt1.setString(2, newName);
@@ -121,8 +184,11 @@ public class DatabaseHandler {
     }
 
     public static void deleteStudent(String id) {
-        String sql1 = "DELETE FROM students WHERE student_id = ?";
-        String sql2 = "DELETE FROM attendance WHERE student_id = ?";
+        String sql1 =
+                "DELETE FROM students WHERE student_id = ?";
+
+        String sql2 =
+                "DELETE FROM attendance WHERE student_id = ?";
 
         try (Connection conn = connect()) {
             conn.setAutoCommit(false);
@@ -148,7 +214,10 @@ public class DatabaseHandler {
         }
     }
 
-    public static List<AttendanceRecord> getMonthlyAttendance(String course, YearMonth yearMonth) {
+    public static List<AttendanceRecord> getMonthlyAttendance(
+            String course,
+            YearMonth yearMonth) {
+
         List<AttendanceRecord> list = new ArrayList<>();
 
         String startDate = String.format(
@@ -164,7 +233,8 @@ public class DatabaseHandler {
                 yearMonth.lengthOfMonth()
         );
 
-        String studentSql = "SELECT student_id, name FROM students";
+        String studentSql =
+                "SELECT student_id, name FROM students";
 
         String attendanceSql =
                 "SELECT student_id, date, status, reason " +
@@ -172,8 +242,10 @@ public class DatabaseHandler {
                         "WHERE course = ? AND date BETWEEN ? AND ?";
 
         try (Connection conn = connect();
-             PreparedStatement studentStmt = conn.prepareStatement(studentSql);
-             PreparedStatement attStmt = conn.prepareStatement(attendanceSql)) {
+             PreparedStatement studentStmt =
+                     conn.prepareStatement(studentSql);
+             PreparedStatement attStmt =
+                     conn.prepareStatement(attendanceSql)) {
 
             ResultSet sRs = studentStmt.executeQuery();
 
@@ -182,7 +254,8 @@ public class DatabaseHandler {
                 String id = sRs.getString("student_id");
                 String name = sRs.getString("name");
 
-                double rate = calculateOverallRate(conn, id, course);
+                double rate =
+                        calculateOverallRate(conn, id, course);
 
                 AttendanceRecord record =
                         new AttendanceRecord(id, name, course, rate);
@@ -256,7 +329,7 @@ public class DatabaseHandler {
             String reason) {
 
         String sql =
-                "INSERT INTO attendance" +
+                "INSERT INTO attendance " +
                         "(student_id, course, date, status, reason) " +
                         "VALUES(?, ?, ?, ?, ?) " +
                         "ON CONFLICT(student_id, course, date) " +
@@ -284,10 +357,10 @@ public class DatabaseHandler {
             String date) {
 
         String sql =
-                "INSERT INTO attendance" +
+                "INSERT INTO attendance " +
                         "(student_id, course, date, status, reason) " +
                         "SELECT student_id, ?, ?, 'Present', NULL " +
-                        "FROM students " +
+                        "FROM students WHERE 1 " +
                         "ON CONFLICT(student_id, course, date) " +
                         "DO UPDATE SET status = 'Present', reason = NULL";
 

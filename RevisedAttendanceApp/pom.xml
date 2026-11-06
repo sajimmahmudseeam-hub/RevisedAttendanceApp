@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.20</version>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21.0.6</version>
@@ -56,7 +61,15 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.example.revisedattendanceapp.Launcher</mainClass>
+                    <mainClass>com.example.revisedattendanceapp/com.example.revisedattendanceapp.Launcher</mainClass>
+
+                    <launcher>AttendanceApp</launcher>
+                    <jlinkImageName>AttendanceAppRuntime</jlinkImageName>
+
+                    <bindServices>true</bindServices>
+                    <stripDebug>true</stripDebug>
+                    <noHeaderFiles>true</noHeaderFiles>
+                    <noManPages>true</noManPages>
                 </configuration>
             </plugin>
         </plugins>
